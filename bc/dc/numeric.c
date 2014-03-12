@@ -308,6 +308,8 @@ dc_getnum DC_DECLARG((input, ibase, readahead))
 	int		digit;
 	int		decimal;
 	int		c;
+	int		c_buff = 0;
+	int		multi = 0;
 
 	bc_init_num(&tmp);
 	bc_init_num(&build);
@@ -325,6 +327,9 @@ dc_getnum DC_DECLARG((input, ibase, readahead))
 	}
 	while (isspace(c))
 		c = (*input)();
+	c_buff = (*input)();	
+	if (isdigit(c_buff) || ('A' <= c_buff && c_buff <= 'F') || c_buff == '.')
+			multi = 1;		
 	for (;;){
 		if (isdigit(c))
 			digit = c - '0';
@@ -332,10 +337,15 @@ dc_getnum DC_DECLARG((input, ibase, readahead))
 			digit = 10 + c - 'A';
 		else
 			break;
-		c = (*input)();
+		digit = multi ? (digit >= ibase ? ibase -1 : digit) : digit;
 		bc_int2num(&tmp, digit);
 		bc_multiply(result, base, &result, 0);
 		bc_add(result, tmp, &result, 0);
+		if (c_buff) {
+			c = c_buff;
+			c_buff = 0;
+		} else
+			c = (*input)();
 	}
 	if (c == '.'){
 		bc_free_num(&build);
@@ -344,13 +354,18 @@ dc_getnum DC_DECLARG((input, ibase, readahead))
 		build = bc_copy_num(_zero_);
 		decimal = 0;
 		for (;;){
-			c = (*input)();
+			if (c_buff) {
+				c = c_buff;
+				c_buff = 0;
+			} else
+				c = (*input)();
 			if (isdigit(c))
 				digit = c - '0';
 			else if ('A' <= c && c <= 'F')
 				digit = 10 + c - 'A';
 			else
 				break;
+			digit = digit >= ibase ? ibase -1 : digit;
 			bc_int2num(&tmp, digit);
 			bc_multiply(build, base, &build, 0);
 			bc_add(build, tmp, &build, 0);
