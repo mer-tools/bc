@@ -661,7 +661,9 @@ dc_evalfile DC_DECLARG((fp))
 	int next_negcmp = 0;
 	dc_data datum;
 
-	signal(SIGINT, dc_trap_interrupt);
+    /* Do not mask SIGINT when running from stdin */
+	if (fp != stdin)
+      signal(SIGINT, dc_trap_interrupt);
 	stdin_lookahead = EOF;
 	for (c=getc(fp); c!=EOF; c=peekc){
 		peekc = getc(fp);

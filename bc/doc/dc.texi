@@ -126,6 +126,8 @@ To exit, use @samp{q}.
 (or whatever other keystroke your system uses to generate a @code{SIGINT})
 does not exit;
 it is used to abort macros that are looping, etc.
+This is not true if running on stdin to prevent accidental user confusion
+about @kbd{C-c} unfunctionality.
 
 A reverse-polish calculator stores numbers on a stack.
 Entering a number pushes it on the stack.
