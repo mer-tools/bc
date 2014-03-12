@@ -99,6 +99,7 @@ more_functions (VOID)
     {
       f = &functions[indx];
       f->f_defined = FALSE;
+      f->f_void = FALSE;
       f->f_body = (char *) bc_malloc (BC_START_SIZE);
       f->f_body_size = BC_START_SIZE;
       f->f_code_size = 0;
@@ -179,7 +180,7 @@ more_arrays ()
 
 
   /* Initialize the new elements. */
-  for (; indx < v_count; indx++)
+  for (; indx < a_count; indx++)
     arrays[indx] = NULL;
 
   /* Free the old elements. */
