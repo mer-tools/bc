@@ -49,4 +49,3 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %doc AUTHORS COPYING ChangeLog NEWS README COPYING.LIB FAQ
 /usr/bin/bc
 /usr/bin/dc
-%{_mandir}/man1/*
