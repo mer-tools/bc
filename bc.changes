@@ -1,0 +1,6 @@
+* Thu Jan 23 2025 Matti Lehtimäki <matti.lehtimaki@jolla.com> - 1.08.1
+- [bc] Update to version 1.08.1. JB#50417
+
+* Wed Mar 12 2014 David Greaves <david.greaves@jolla.com> - 1.06.95
+- [bc] Package bc properly. Fixes MER#1256
+- [packaging] add rpm packaging

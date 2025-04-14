@@ -3,13 +3,15 @@ BuildRequires:  bison
 BuildRequires:  ed
 BuildRequires:  flex
 BuildRequires:  readline-devel
+BuildRequires:  texinfo
 Url:            ftp://ftp.gnu.org/pub/gnu/bc
-Version:        1.06.95
+Version:        1.08.1
 Release:        1
 Summary:        GNU Command Line Calculator
-License:        GPL-2.0+
-Group:          Productivity/Scientific/Math
-Source:         bc-%{version}.tar.bz2
+License:        GPLv3+
+Source:         bc-%{version}.tar.xz
+Patch1:         bc-1.06-dc_ibase.patch
+Patch2:         bc-1.07.1-readline-echo-empty.diff
 
 %description
 bc is an interpreter that supports numbers of arbitrary precision and
@@ -30,22 +32,20 @@ the next operator is read in, which "pops" its arguments off the stack
 and "pushes" its results back onto the stack.
 
 %prep
-%setup -n %{name}-%{version}/%{name}
+%autosetup -p1 -n %{name}-%{version}
 
 %build
-./configure CFLAGS="$RPM_OPT_FLAGS" \
-            --with-readline \
-            --prefix=/usr \
-            --mandir=%{_mandir} \
-            --build=%{_target_cpu}-suse-linux
-rm bc/libmath.h
-make
+%configure --with-readline
+%make_build
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT
+%make_install
+
+rm -Rf %{buildroot}%{_datadir}/info
+rm -Rf %{buildroot}%{_datadir}/man
 
 %files
-%defattr(-,root,root)
-%doc AUTHORS COPYING ChangeLog NEWS README COPYING.LIB FAQ
-/usr/bin/bc
-/usr/bin/dc
+%license COPYING COPYING.LIB
+%doc AUTHORS ChangeLog NEWS README FAQ
+%{_bindir}/bc
+%{_bindir}/dc
